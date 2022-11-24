@@ -44,6 +44,14 @@ namespace Client
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
+
+        private void sumbitRequest_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> labelsNew = new List<string>(Labels);
+            labelsNew.Add("NewLabel");
+            SeriesCollection[0].Values.Add(7.0);
+            
+        }
     }
     
 }
