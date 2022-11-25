@@ -22,8 +22,8 @@ namespace Server
 
         static async Task Main(string[] args)
         {
-            exchangeRates = new RateContainerLogger(new RateContainer(), logFile);
-            exchangeRates.LoadFromJson(dataFile);
+            exchangeRates = new RateContainerLogger(new RateContainer(dataFile), logFile,dataFile);
+            exchangeRates.LoadFromJson();
 
             server.Prefixes.Add(connectionString);
             server.Start();
@@ -50,7 +50,7 @@ namespace Server
             }
 
             server.Stop();
-            exchangeRates.SaveToJson(dataFile);
+            exchangeRates.SaveToJson();
             Console.WriteLine(DateTime.Now + " Server stopped.");
             
 

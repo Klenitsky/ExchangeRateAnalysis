@@ -11,13 +11,15 @@ namespace Server.Services.Decorators
     {
         private readonly IExchangeRateService service;
         private readonly string writerFile;
-        bool disposed;
+        private readonly string jsonFilename;
 
-        public RateContainerLogger(IExchangeRateService service, string filename)
+        public RateContainerLogger(IExchangeRateService service, string filename,string jsonFileName)
         {
             this.service = service;
             this.writerFile = filename;
+            this.jsonFilename = jsonFileName;
         }
+
         public void Clear()
         {
             using (var writer = new StreamWriter(File.Open(writerFile, FileMode.Append)))
@@ -45,25 +47,25 @@ namespace Server.Services.Decorators
             return rates;
         }
 
-        public void LoadFromJson(string filename)
+        public void LoadFromJson()
         {
             using (var writer = new StreamWriter(File.Open(writerFile, FileMode.Append)))
             {
                 writer.Write(DateTime.Now.ToString("MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture) + " Calling LoadFromJson() with ");
-                writer.WriteLine("filename= '" + filename + "'");
-                this.service.LoadFromJson(filename);
+                writer.WriteLine("filename= '" + jsonFilename + "'");
+                this.service.LoadFromJson();
                 writer.WriteLine(DateTime.Now.ToString("MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture) + " LoadFromJson() finished successfully with ");
             }
 
         }
 
-        public void SaveToJson(string filename)
+        public void SaveToJson()
         {
             using (var writer = new StreamWriter(File.Open(writerFile, FileMode.Append)))
             {
                 writer.Write(DateTime.Now.ToString("MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture) + " Calling SaveToJson() with ");
-                writer.WriteLine("filename= '" + filename + "'");
-                this.service.SaveToJson(filename);
+                writer.WriteLine("filename= '" + jsonFilename + "'");
+                this.service.SaveToJson();
                 writer.WriteLine(DateTime.Now.ToString("MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture) + " SaveToJson() finished successfully ");
             }
         }

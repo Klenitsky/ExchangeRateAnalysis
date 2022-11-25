@@ -13,11 +13,13 @@ namespace Server
     public class RateContainer: IExchangeRateService
     {
         private List<ExchangeRate> exchangeRates;
+        private readonly string jsonFilename;
 
-
-        public RateContainer()
+        public RateContainer(string filename)
         {
+            jsonFilename = filename;
             exchangeRates = new List<ExchangeRate>();
+            this.LoadFromJson();
         }
 
 
@@ -68,19 +70,19 @@ namespace Server
                     }
                 }
             }
-
+            this.SaveToJson();
             return appropriateRates;
         }
-        public void SaveToJson(string filename)
+        public void SaveToJson()
         {
-            StreamWriter writer = new StreamWriter(filename);
+            StreamWriter writer = new StreamWriter(jsonFilename);
             writer.Write(JsonConvert.SerializeObject(exchangeRates.ToArray()));
             writer.Close();
         }
 
-        public void LoadFromJson(string filename)
+        public void LoadFromJson()
         {
-            StreamReader reader = new StreamReader(filename);
+            StreamReader reader = new StreamReader(jsonFilename);
             exchangeRates =  new List<ExchangeRate>(JsonConvert.DeserializeObject<ExchangeRate[]>(reader.ReadToEnd()));
             reader.Close();
         }

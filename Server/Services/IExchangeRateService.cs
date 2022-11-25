@@ -10,8 +10,8 @@ namespace Server.Services
         public void Clear();
         public List<ExchangeRate> GetRatesFromRange(DateTime startDate, DateTime endDate, string currency);
 
-        public void SaveToJson(string filename);
-        public void LoadFromJson(string filename);
+        public void SaveToJson();
+        public void LoadFromJson();
 
     }
 }
