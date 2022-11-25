@@ -49,7 +49,7 @@ namespace Server
 
             server.Stop();
             Console.WriteLine(DateTime.Now + " Server stopped.");
-
+            
             //exchangeRates.GetRatesFromRange(new DateTime(2022, 1, 2), DateTime.Today, "USD");
             //Console.WriteLine("Dat");
 
