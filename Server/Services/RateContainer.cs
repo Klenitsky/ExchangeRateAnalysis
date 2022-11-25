@@ -44,7 +44,7 @@ namespace Server
         {
             List<ExchangeRate> appropriateRates = new List<ExchangeRate>();
             TimeSpan oneDay = new TimeSpan(24, 0, 0);
-            for(var currentDate = startDate; currentDate != endDate; currentDate += oneDay)
+            for(var currentDate = startDate; currentDate != endDate+oneDay; currentDate += oneDay)
             {
                 var exchangeRate = exchangeRates.Find(rate => (rate.Currency == currency && rate.Date == currentDate));
                 if (exchangeRate != null)
