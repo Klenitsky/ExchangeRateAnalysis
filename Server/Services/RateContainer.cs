@@ -6,10 +6,11 @@ using System.Text;
 using Newtonsoft.Json;
 
 using RestSharp;
+using Server.Services;
 
 namespace Server
 {
-    public class RateContainer
+    public class RateContainer: IExchangeRateService
     {
         private List<ExchangeRate> exchangeRates;
 

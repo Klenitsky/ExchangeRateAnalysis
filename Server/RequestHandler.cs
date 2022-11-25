@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Server.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +10,7 @@ namespace Server
     public static class RequestHandler
     {
 
-        public static string GetRequestString(string requestParameters, RateContainer container)
+        public static string GetRequestString(string requestParameters, IExchangeRateService container)
         {
             char[] separators = { '?', '&' };
             var requestParametersArray = requestParameters.Split(separators);

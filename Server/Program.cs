@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Server.Services;
+using Server.Services.Decorators;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,16 +13,16 @@ namespace Server
 {
     static class Program
     {
-        private static RateContainer exchangeRates = new RateContainer();
+        private static IExchangeRateService exchangeRates;
         private static string dataFile = "rates.json";
+        private static string logFile = "serviceLog.log";
         private static string connectionString = "http://127.0.0.1:8888/ExchangeRates/";
         private static HttpListener server = new HttpListener();
 
 
         static async Task Main(string[] args)
         {
-            List<DataStructures.ExchangeRate> testRates = new List<DataStructures.ExchangeRate>();
-            exchangeRates = new RateContainer(testRates);
+            exchangeRates = new RateContainerLogger(new RateContainer(), logFile);
             exchangeRates.LoadFromJson(dataFile);
 
             server.Prefixes.Add(connectionString);
@@ -48,10 +50,9 @@ namespace Server
             }
 
             server.Stop();
+            exchangeRates.SaveToJson(dataFile);
             Console.WriteLine(DateTime.Now + " Server stopped.");
             
-            //exchangeRates.GetRatesFromRange(new DateTime(2022, 1, 2), DateTime.Today, "USD");
-            //Console.WriteLine("Dat");
 
 
 
