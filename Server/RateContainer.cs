@@ -9,18 +9,18 @@ using RestSharp;
 
 namespace Server
 {
-    public class RateConatiner
+    public class RateContainer
     {
         private List<ExchangeRate> exchangeRates;
 
 
-        public RateConatiner()
+        public RateContainer()
         {
             exchangeRates = new List<ExchangeRate>();
         }
 
 
-        public RateConatiner(List<ExchangeRate> rates)
+        public RateContainer(List<ExchangeRate> rates)
         {
             this.exchangeRates = new List<ExchangeRate>();
             foreach(var rate in rates)
@@ -34,6 +34,10 @@ namespace Server
             exchangeRates.Clear();
         }
 
+        internal object ToArray()
+        {
+            return exchangeRates.ToArray();
+        }
 
         public List<ExchangeRate> GetRatesFromRange(DateTime startDate, DateTime endDate, string currency)
         {
