@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LiveCharts;
-using LiveCharts.Wpf;
+using Client.Models;
+using System.Linq;
+
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace Client
 {
@@ -22,35 +26,39 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static string connectionString = "http://127.0.0.1:8888/ExchangeRates/";
+        private List<string> dates = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
-            SeriesCollection = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Series 1",
-                    Values = new ChartValues<double> { 4, 6, 5, 2 ,4 }
-                }
-            };
-
-            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" };
-            YFormatter = value => value.ToString("C");
-            //modifying any series values will also animate and update the chart
-
-            DataContext = this;
         }
 
-        public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
 
         private void sumbitRequest_Click(object sender, RoutedEventArgs e)
         {
-            List<string> labelsNew = new List<string>(Labels);
-            labelsNew.Add("NewLabel");
-            SeriesCollection[0].Values.Add(7.0);
-            
+            var client = new RestClient(connectionString+ СurrencyType.Text);
+            var request = new RestRequest()
+                .AddQueryParameter("startDate", DateTime.ParseExact(startDateBox.Text, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"))
+                .AddQueryParameter("endDate", DateTime.ParseExact(endDateBox.Text, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"));
+            RestResponse response = client.Execute(request);
+
+            var jsonRate = response.Content;
+            var rates = JsonConvert.DeserializeObject<ExchangeRate[]>(jsonRate);
+
+            List<double> ExchangeRatesValues = new List<double>();
+            List<double> RatesTimes = new List<double>();
+
+            foreach (var rate in rates)
+            {
+                ExchangeRatesValues.Add(rate.Value);
+                RatesTimes.Add(rate.Date.ToOADate());
+            }
+           ExchangeRatePlot.Plot.Clear();
+           ExchangeRatePlot.Plot.AddScatterLines(RatesTimes.ToArray(), ExchangeRatesValues.ToArray());
+            ExchangeRatePlot.Plot.XAxis.DateTimeFormat(true);
+            ExchangeRatePlot.Refresh();
         }
     }
     

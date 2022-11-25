@@ -21,3 +21,8 @@ K:\githubUnity\ExchangeRateAnlysis\Client\obj\Debug\netcoreapp3.1\Client.genrunt
 K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\LiveCharts.dll
 K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\LiveCharts.Wpf.dll
 K:\githubUnity\ExchangeRateAnlysis\Client\obj\Debug\netcoreapp3.1\Client.csproj.CopyComplete
+K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\RestSharp.dll
+K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\ScottPlot.dll
+K:\githubUnity\ExchangeRateAnlysis\Client\bin\Debug\netcoreapp3.1\ScottPlot.WPF.dll
