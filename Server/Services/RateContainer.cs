@@ -108,15 +108,9 @@ namespace Server
             RestResponse response = client.Execute(request);
 
            var jsonRate =  response.Content;
-           var rate = JsonConvert.DeserializeObject<Bitcoin>(jsonRate);
-
-
-            client = new RestClient("https://www.nbrb.by/api/exrates/rates/USD");
-            request = new RestRequest().AddQueryParameter("parammode", "2").AddQueryParameter("ondate", date.ToString("yyyy-M-d")); 
-            response = client.Execute(request);
-            jsonRate = response.Content;
-            var usdRate = JsonConvert.DeserializeObject<Rate>(jsonRate); 
-            return new ExchangeRate("BTC", rate.time, rate.rate*usdRate.Cur_OfficialRate, 1);
+           var btcRate = JsonConvert.DeserializeObject<Bitcoin>(jsonRate);
+            
+            return new ExchangeRate("BTC", btcRate.time, btcRate.rate, 1);
         }
     }
 }
