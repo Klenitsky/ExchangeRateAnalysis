@@ -1,5 +1,6 @@
 ﻿using Client.Models;
 using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Newtonsoft.Json;
 using RestSharp;
@@ -18,8 +19,6 @@ namespace Client.ViewModels
     {
         private static string connectionString = "http://127.0.0.1:8888/ExchangeRates/";
         private List<string> currencyTypes = new List<string>{ "USD", "RUB", "EUR", "BTC" };
-        private ExchangeRate maxRate;
-        private ExchangeRate minRate;
         private int maxSeriesX;
 
 
@@ -76,26 +75,6 @@ namespace Client.ViewModels
             {
                 maxSeriesX = value;
                 OnPropertyChanged("MaxSeriesX");
-            }
-        }
-
-        public ExchangeRate MaxRate
-        {
-            get { return maxRate; }
-            set
-            {
-                maxRate = value;
-                OnPropertyChanged("MaxRate");
-            }
-        }
-
-        public ExchangeRate MinRate
-        {
-            get { return minRate; }
-            set
-            {
-                minRate = value;
-                OnPropertyChanged("MinRate");
             }
         }
 
@@ -174,11 +153,27 @@ namespace Client.ViewModels
                       }
                       List<double> ExchangeRatesValues = new List<double>();
                       List<string> dates = new List<string>();
+                      double minRate=double.MaxValue;
+                      int indexMinRate=-1;
 
-                      foreach (var rate in rates)
+                      double maxRate=0;
+                      int indexMaxRate=-1;
+
+                      for(int i=0;i<rates.Length;i++)
                       {
-                          ExchangeRatesValues.Add(rate.Value);
-                          dates.Add(rate.Date.ToString("dd-MM"));
+                          ExchangeRatesValues.Add(rates[i].Value);
+                          dates.Add(rates[i].Date.ToString("dd-MM"));
+                          if(rates[i].Value> maxRate)
+                          {
+                              maxRate = rates[i].Value;
+                              indexMaxRate = i;
+                          }
+
+                          if (rates[i].Value < minRate)
+                          {
+                              minRate = rates[i].Value;
+                              indexMinRate = i;
+                          }
                       }
                       MaxSeriesX = ExchangeRatesValues.Count+1;
                       SeriesCollection[0] = new LineSeries
@@ -186,6 +181,20 @@ namespace Client.ViewModels
                           Title = currencyTypes[Currency],
                           Values = new ChartValues<double>(ExchangeRatesValues)
                       };
+                      SeriesCollection[1] = new ScatterSeries
+                      {
+                          Title = "min",
+                          Values = new ChartValues<ObservablePoint> { new ObservablePoint(indexMinRate, minRate) },
+                          PointGeometry = DefaultGeometries.Square
+                      };
+
+                      SeriesCollection[2] = new ScatterSeries
+                      {
+                          Title = "max",
+                          Values = new ChartValues<ObservablePoint> { new ObservablePoint(indexMaxRate, maxRate) },
+                          PointGeometry = DefaultGeometries.Square
+                      };
+
                       Labels = dates;
                   }));
             }
@@ -197,12 +206,26 @@ namespace Client.ViewModels
                 new LineSeries
                 {
                     Title = "Exchange Rate",
-                    Values = new ChartValues<double> {1,2,3 }
+                    Values = new ChartValues<double> { },
+                },
+
+                new ScatterSeries
+                {
+                    Title = "min",
+                    Values = new ChartValues<ObservablePoint> { new ObservablePoint(0, 0) },
+                    PointGeometry = DefaultGeometries.Square
+                },
+
+                 new ScatterSeries
+                {
+                    Title = "max",
+                    Values = new ChartValues<ObservablePoint> { new ObservablePoint(0, 0) },
+                    PointGeometry = DefaultGeometries.Square
                 }
-               
+
             };
             MaxSeriesX = 3;
-            Labels = new List<string> {"01","02","03"};
+            Labels = new List<string> {};
             YFormatter = value => Math.Round(value,4).ToString("");
         }
 
