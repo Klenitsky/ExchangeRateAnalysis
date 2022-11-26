@@ -18,6 +18,7 @@ namespace Client.ViewModels
     class ApplicationViewModel: INotifyPropertyChanged
     {
         private static string connectionString = "http://127.0.0.1:8888/ExchangeRates/";
+        //private static string connectionString = "http://192.168.100.1:8888/ExchangeRates/";
         private List<string> currencyTypes = new List<string>{ "USD", "RUB", "EUR", "BTC" };
         private int maxSeriesX;
 
@@ -227,6 +228,8 @@ namespace Client.ViewModels
             MaxSeriesX = 3;
             Labels = new List<string> {};
             YFormatter = value => Math.Round(value,4).ToString("");
+            StartDateString = "Начальная дата";
+            EndDateString = "Конечная дата";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

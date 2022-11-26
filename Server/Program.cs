@@ -17,6 +17,7 @@ namespace Server
         private static string dataFile = "rates.json";
         private static string logFile = "serviceLog.log";
         private static string connectionString = "http://127.0.0.1:8888/ExchangeRates/";
+        //private static string connectionString = "http://192.168.100.5:8888/ExchangeRates/";
         private static HttpListener server = new HttpListener();
 
 
