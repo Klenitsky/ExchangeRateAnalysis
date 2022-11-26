@@ -22,8 +22,15 @@ namespace Server
             endDateAsString = endDateAsString.ToUpper().Replace("ENDDATE=", "");
             DateTime startDate = DateTime.ParseExact(startDateAsString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime endDate = DateTime.ParseExact(endDateAsString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-
-            var appropriateExchangeRates = container.GetRatesFromRange(startDate, endDate, currency.ToUpper());
+            List<DataStructures.ExchangeRate> appropriateExchangeRates = new List<DataStructures.ExchangeRate>();
+            try
+            {
+                 appropriateExchangeRates = container.GetRatesFromRange(startDate, endDate, currency.ToUpper());
+            }
+            catch(ArgumentException)
+            {
+                return "Error while requesting data from API";
+            }
             return JsonConvert.SerializeObject(appropriateExchangeRates.ToArray());
         }
     }

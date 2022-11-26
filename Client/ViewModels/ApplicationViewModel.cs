@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 
 namespace Client.ViewModels
 {
@@ -107,14 +108,70 @@ namespace Client.ViewModels
                   (printSeriesCommand = new RelayCommand(obj =>
                   {
                       var client = new RestClient(connectionString + currencyTypes[currency]);
+                      DateTime startDate;
+                      try
+                      {
+                          startDate = DateTime.Parse(startDateString);
+                      }
+                      catch (FormatException)
+                      {
+                          MessageBox.Show("Invalid startDate");
+                          return;
+                      }
+
+                      DateTime endDate;
+                      try
+                      {
+                          endDate = DateTime.Parse(endDateString);
+                      }
+                      catch (FormatException)
+                      {
+                          MessageBox.Show("Invalid endDate");
+                          return;
+                      }
+
+                      TimeSpan fiveYears = new TimeSpan(5 * 24 * 365, 0, 0);
+
+                      if(startDate> DateTime.Now || endDate > DateTime.Now)
+                      {
+                          MessageBox.Show("Date is in future");
+                          return;
+                      }
+
+                      if (startDate < (DateTime.Now-fiveYears) || endDate < (DateTime.Now-fiveYears))
+                      {
+                          MessageBox.Show("Too early date");
+                          return;
+                      }
+
+                      if (startDate > endDate)
+                      {
+                          MessageBox.Show("Invalid interval");
+                          return;
+                      }
+
                       var request = new RestRequest()
-                          .AddQueryParameter("startDate", DateTime.ParseExact(startDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"))
-                          .AddQueryParameter("endDate", DateTime.ParseExact(endDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture).ToString("dd-MM-yyyy"));
+                          .AddQueryParameter("startDate", startDate.ToString("dd-MM-yyyy"))
+                          .AddQueryParameter("endDate", endDate.ToString("dd-MM-yyyy"));
                       RestResponse response = client.Execute(request);
 
-                      var jsonRate = response.Content;
-                      var rates = JsonConvert.DeserializeObject<ExchangeRate[]>(jsonRate);
+                      if (!response.IsSuccessful)
+                      {
+                          MessageBox.Show("Error on server side!");
+                          return;
+                      }
 
+                      var jsonRate = response.Content;
+                      ExchangeRate[] rates;
+                      try
+                      {
+                          rates = JsonConvert.DeserializeObject<ExchangeRate[]>(jsonRate);
+                      }
+                      catch(JsonReaderException)
+                      {
+                          MessageBox.Show(jsonRate);
+                          return;
+                      }
                       List<double> ExchangeRatesValues = new List<double>();
                       List<string> dates = new List<string>();
 
@@ -123,7 +180,7 @@ namespace Client.ViewModels
                           ExchangeRatesValues.Add(rate.Value);
                           dates.Add(rate.Date.ToString("dd-MM"));
                       }
-                      MaxSeriesX = ExchangeRatesValues.Count;
+                      MaxSeriesX = ExchangeRatesValues.Count+1;
                       SeriesCollection[0] = new LineSeries
                       {
                           Title = currencyTypes[Currency],

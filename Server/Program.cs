@@ -41,10 +41,8 @@ namespace Server
 
                 string responseText = RequestHandler.GetRequestString(requestString, exchangeRates);
                 byte[] buffer = Encoding.UTF8.GetBytes(responseText);
-                // получаем поток ответа и пишем в него ответ
                 response.ContentLength64 = buffer.Length;
                 using Stream output = response.OutputStream;
-                // отправляем данные
                 await output.WriteAsync(buffer);
                 await output.FlushAsync();
             }

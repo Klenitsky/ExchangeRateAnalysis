@@ -46,6 +46,7 @@ namespace Server
         {
             List<ExchangeRate> appropriateRates = new List<ExchangeRate>();
             TimeSpan oneDay = new TimeSpan(24, 0, 0);
+            
             for(var currentDate = startDate; currentDate != endDate+oneDay; currentDate += oneDay)
             {
                 var exchangeRate = exchangeRates.Find(rate => (rate.Currency == currency && rate.Date == currentDate));
@@ -57,10 +58,9 @@ namespace Server
                 {
                     if(currency == "BTC")
                     {
-                        var cryptoRate = loadCryptoCurrency(currentDate);
-                        appropriateRates.Add(cryptoRate);
-                        exchangeRates.Add(cryptoRate);
-
+                            var cryptoRate = loadCryptoCurrency(currentDate);
+                            appropriateRates.Add(cryptoRate);
+                            exchangeRates.Add(cryptoRate);
                     }
                     else
                     {
@@ -90,8 +90,12 @@ namespace Server
         private ExchangeRate loadBasicCurrency(string currencyCode, DateTime date)
         {
             var client = new RestClient("https://www.nbrb.by/api/exrates/rates/" +currencyCode);
-            var request = new RestRequest().AddQueryParameter("parammode", "2").AddQueryParameter("ondate", date.ToString("yyyy-M-d"));
+            var request = new RestRequest().AddQueryParameter("parammode", "2").AddQueryParameter("ondate", date.ToString("yyyy-M-d"));         
             var response = client.Execute(request);
+            if (!response.IsSuccessful)
+            {
+                throw new ArgumentException("API doesn't response");
+            }
 
             string responseAsString = response.Content;
 
@@ -107,8 +111,12 @@ namespace Server
             request.AddHeader("X-CoinAPI-Key", "E084154C-E132-4571-8493-B118285B5164");
             RestResponse response = client.Execute(request);
 
-           var jsonRate =  response.Content;
-           var btcRate = JsonConvert.DeserializeObject<Bitcoin>(jsonRate);
+            if (!response.IsSuccessful)
+            {
+                throw new ArgumentException("API doesn't response");
+            }
+            var jsonRate =  response.Content;
+            var btcRate = JsonConvert.DeserializeObject<Bitcoin>(jsonRate);
             
             return new ExchangeRate("BTC", btcRate.time, btcRate.rate, 1);
         }
