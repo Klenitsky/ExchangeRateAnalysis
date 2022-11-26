@@ -389,21 +389,26 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBox x:Name ="startDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center"  Margin="5 0 3 0" >Начальная дата</TextBox>
+            <TextBox x:Name ="startDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center"  Margin="5 0 3 0"  Text="{Binding StartDateString}"/>
             <TextBlock  VerticalAlignment="Center" >-</TextBlock>
-            <TextBox x:Name ="endDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center" Margin="3 0 5 0" >Конечная дата</TextBox>
+            <TextBox x:Name="endDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center" Margin="3 0 5 0" Text="{Binding EndDateString}"/>
             <TextBlock  VerticalAlignment="Center" Margin="5 0 0 0" >Валюта:</TextBlock>
-            <ComboBox x:Name="СurrencyType" MinWidth="120" MaxWidth="150" Text="Please select"  VerticalAlignment="Center"  MaxHeight="20" Margin="5 0 5 0" SelectedIndex="0">
+            <ComboBox x:Name="СurrencyType" MinWidth="120" MaxWidth="150" Text="Please select"  VerticalAlignment="Center"  MaxHeight="20" Margin="5 0 5 0" SelectedIndex="{Binding Currency}">
                 <ComboBoxItem>USD</ComboBoxItem>
                 <ComboBoxItem>RUB</ComboBoxItem>
                 <ComboBoxItem>EUR</ComboBoxItem>
                 <ComboBoxItem>BTC</ComboBoxItem>
             </ComboBox>
-            <Button x:Name="sumbitRequest" MinWidth="80" MaxHeight="20"  Margin="5 0 10 0" Click="sumbitRequest_Click">Получить</Button>
+            <Button x:Name="sumbitRequest" MinWidth="80" MaxHeight="20"  Margin="5 0 10 0"  Command="{Binding PrintSeriesCommand}" >Получить</Button>
         </StackPanel>
 
-        <WpfPlot x:Name="ExchangeRatePlot" Grid.Row="1" >
-            
-        </WpfPlot>
+        <lvc:CartesianChart x:Name ="exchangeChart"  Grid.Row = "1"  Series="{Binding SeriesCollection}" LegendLocation="None" >
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="Date" Labels="{Binding Labels}" MaxValue="{Binding MaxSeriesX}"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
     </Grid>
 </Window>
