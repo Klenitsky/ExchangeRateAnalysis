@@ -200,8 +200,25 @@ namespace Client.ViewModels
                   }));
             }
         }
+
+        private RelayCommand shutdownCommand;
+        public RelayCommand ShutdownCommand
+        {
+            get
+            {
+                return shutdownCommand ??
+                    (shutdownCommand = new RelayCommand(obj =>
+                    {
+                        var client = new RestClient(connectionString + "StopServer");
+                        var request = new RestRequest();
+                        client.Execute(request);
+                    }));
+            }
+        }
+
         public ApplicationViewModel()
         {
+
             SeriesCollection = new SeriesCollection
             {
                 new LineSeries

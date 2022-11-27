@@ -385,10 +385,11 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="20"></RowDefinition>
             <RowDefinition MaxHeight="50"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch">
             <TextBox x:Name ="startDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center"  Margin="5 0 3 0"  Text="{Binding StartDateString}"/>
             <TextBlock  VerticalAlignment="Center" >-</TextBlock>
             <TextBox x:Name="endDateBox" MinWidth="150" MinHeight="20" VerticalAlignment="Center" Margin="3 0 5 0" Text="{Binding EndDateString}"/>
@@ -402,7 +403,7 @@
             <Button x:Name="sumbitRequest" MinWidth="80" MaxHeight="20"  Margin="5 0 10 0"  Command="{Binding PrintSeriesCommand}" >Получить</Button>
         </StackPanel>
 
-        <lvc:CartesianChart x:Name ="exchangeChart"  Grid.Row = "1"  Series="{Binding SeriesCollection}" LegendLocation="None" >
+        <lvc:CartesianChart x:Name ="exchangeChart"  Grid.Row = "2"  Series="{Binding SeriesCollection}" LegendLocation="None" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
@@ -410,5 +411,12 @@
                 <lvc:Axis Title="Date" Labels="{Binding Labels}" MaxValue="{Binding MaxSeriesX}"></lvc:Axis>
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
+
+        <Menu Height="20" VerticalAlignment="Top">
+            <MenuItem Header="Menu">
+                <MenuItem Header="Shutdown server" Command="{Binding ShutdownCommand}"></MenuItem>
+            </MenuItem>
+
+        </Menu>
     </Grid>
 </Window>
