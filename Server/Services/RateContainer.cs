@@ -82,9 +82,18 @@ namespace Server
 
         public void LoadFromJson()
         {
-            StreamReader reader = new StreamReader(jsonFilename);
-            exchangeRates =  new List<ExchangeRate>(JsonConvert.DeserializeObject<ExchangeRate[]>(reader.ReadToEnd()));
-            reader.Close();
+            if (File.Exists(jsonFilename))
+            {
+                StreamReader reader = new StreamReader(jsonFilename);
+                exchangeRates = new List<ExchangeRate>(JsonConvert.DeserializeObject<ExchangeRate[]>(reader.ReadToEnd()));
+                reader.Close();
+            }
+            else
+            {
+                StreamWriter writer = new StreamWriter(jsonFilename);
+                writer.Write(JsonConvert.SerializeObject(exchangeRates.ToArray()));
+                writer.Close();
+            }
         }
 
         private ExchangeRate loadBasicCurrency(string currencyCode, DateTime date)
