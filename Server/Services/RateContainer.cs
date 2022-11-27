@@ -85,8 +85,18 @@ namespace Server
             if (File.Exists(jsonFilename))
             {
                 StreamReader reader = new StreamReader(jsonFilename);
-                exchangeRates = new List<ExchangeRate>(JsonConvert.DeserializeObject<ExchangeRate[]>(reader.ReadToEnd()));
-                reader.Close();
+                try
+                {
+                    exchangeRates = new List<ExchangeRate>(JsonConvert.DeserializeObject<ExchangeRate[]>(reader.ReadToEnd()));
+                    reader.Close();
+                }
+                catch (ArgumentNullException)
+                {
+                    reader.Close();
+                    StreamWriter writer = new StreamWriter(jsonFilename);
+                    writer.Write(JsonConvert.SerializeObject(new ExchangeRate[0]));
+                    writer.Close();
+                }
             }
             else
             {
