@@ -7,6 +7,7 @@ namespace Server.DataStructures
 {
     public class ExchangeRate
     {
+        public int Id { get; set; }
         public string Currency { get; set; }
         public DateTime Date { get; set; }
         public double Value { get; set; }

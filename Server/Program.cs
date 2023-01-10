@@ -23,7 +23,8 @@ namespace Server
 
         static async Task Main(string[] args)
         {
-            exchangeRates = new RateContainerLogger(new RateContainer(dataFile), logFile,dataFile);
+            // exchangeRates = new RateContainerLogger(new RateContainer(dataFile), logFile,dataFile);
+            exchangeRates = new RateContainerLogger(new DataBaseRateService(), logFile, dataFile);
             exchangeRates.LoadFromJson();
 
             server.Prefixes.Add(connectionString);
