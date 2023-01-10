@@ -9,6 +9,8 @@ namespace Client.Models
 {
     public class ExchangeRate : INotifyPropertyChanged
     {
+        public int Id { get; set; }
+
         private string currency;
         private DateTime date;
         private double value;
